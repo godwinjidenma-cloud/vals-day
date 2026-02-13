@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Happy Valentine's Day, Debbie 💌</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --rose: #c0394b;
+    --blush: #f2a7b0;
+    --cream: #fff8f0;
+    --deep: #1a0a0e;
+    --gold: #d4a843;
+  }
+
+  body {
+    background: var(--deep);
+    color: var(--cream);
+    font-family: 'DM Sans', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+    cursor: default;
+  }
+
+  /* Particle background */
+  .particles {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .particle {
+    position: absolute;
+    font-size: 1rem;
+    opacity: 0;
+    animation: float-up linear infinite;
+  }
+
+  @keyframes float-up {
+    0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+    10% { opacity: 0.4; }
+    90% { opacity: 0.2; }
+    100% { transform: translateY(-20px) rotate(360deg); opacity: 0; }
+  }
+
+  /* Envelope screen */
+  #envelope-screen {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+    background: var(--deep);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+  }
+
+  #envelope-screen.hide {
+    opacity: 0;
+    transform: scale(1.1);
+    pointer-events: none;
+  }
+
+  .envelope-wrap {
+    position: relative;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+  }
+
+  .envelope-wrap:hover { transform: scale(1.05); }
+
+  .envelope {
+    width: 200px;
+    height: 140px;
+    background: var(--rose);
+    border-radius: 4px;
+    position: relative;
+    box-shadow: 0 20px 60px rgba(192,57,75,0.4);
+  }
+
+  .envelope::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 70px;
+    background: #a8293b;
+    clip-path: polygon(0 0, 50% 65%, 100% 0);
+    transition: transform 0.6s ease;
+    transform-origin: top center;
+    z-index: 2;
+  }
+
+  .envelope-wrap.open .envelope::before {
+    transform: rotateX(180deg);
+  }
+
+  .envelope::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0; top: 0;
+    background: linear-gradient(135deg, #c0394b 50%, #a8293b 50%);
+    clip-path: polygon(0 100%, 50% 40%, 100% 100%);
+  }
+
+  .envelope-letter {
+    position: absolute;
+    width: 80%;
+    height: 90%;
+    background: var(--cream);
+    top: 5%;
+    left: 10%;
+    border-radius: 2px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1;
+    transition: transform 0.6s ease 0.2s;
+    color: var(--rose);
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem;
+  }
+
+  .envelope-wrap.open .envelope-letter {
+    transform: translateY(-80px);
+  }
+
+  .tap-hint {
+    margin-top: 2rem;
+    font-size: 0.85rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--blush);
+    opacity: 0.7;
+    animation: pulse 2s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 0.7; }
+    50% { opacity: 0.3; }
+  }
+
+  .envelope-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.2rem, 3vw, 1.6rem);
+    color: var(--blush);
+    margin-bottom: 2.5rem;
+    letter-spacing: 0.05em;
+    text-align: center;
+    padding: 0 1rem;
+  }
+
+  /* Main content */
+  #main-content {
+    position: relative;
+    z-index: 5;
+    opacity: 0;
+    transition: opacity 0.8s ease 0.3s;
+    padding: 3rem 1.5rem 5rem;
+    max-width: 680px;
+    margin: 0 auto;
+  }
+
+  #main-content.show { opacity: 1; }
+
+  .header {
+    text-align: center;
+    margin-bottom: 4rem;
+  }
+
+  .header-date {
+    font-size: 0.75rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 1rem;
+  }
+
+  .header h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.2rem, 7vw, 3.5rem);
+    line-height: 1.1;
+    color: var(--cream);
+  }
+
+  .header h1 span {
+    color: var(--blush);
+    font-style: italic;
+  }
+
+  .header-sub {
+    margin-top: 1rem;
+    color: rgba(255,248,240,0.5);
+    font-size: 0.95rem;
+    font-weight: 300;
+  }
+
+  /* Timeline */
+  .timeline {
+    position: relative;
+    padding-left: 2rem;
+  }
+
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.5rem;
+    bottom: 0.5rem;
+    width: 1px;
+    background: linear-gradient(to bottom, transparent, var(--rose), var(--rose), transparent);
+  }
+
+  .item {
+    position: relative;
+    margin-bottom: 2.5rem;
+    opacity: 0;
+    transform: translateX(-20px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+
+  .item.visible {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  .item::before {
+    content: '';
+    position: absolute;
+    left: -2.4rem;
+    top: 0.6rem;
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: var(--rose);
+    box-shadow: 0 0 12px var(--rose);
+  }
+
+  .item-time {
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 0.3rem;
+  }
+
+  .item-card {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(192,57,75,0.2);
+    border-radius: 12px;
+    padding: 1.2rem 1.4rem;
+    transition: border-color 0.3s ease, background 0.3s ease;
+  }
+
+  .item-card:hover {
+    border-color: rgba(192,57,75,0.5);
+    background: rgba(255,255,255,0.07);
+  }
+
+  .item-top {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .item-emoji {
+    font-size: 1.4rem;
+    flex-shrink: 0;
+  }
+
+  .item-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.15rem;
+    color: var(--cream);
+  }
+
+  .item-desc {
+    font-size: 0.88rem;
+    color: rgba(255,248,240,0.55);
+    line-height: 1.6;
+    font-weight: 300;
+  }
+
+  .mystery-badge {
+    display: inline-block;
+    margin-top: 0.5rem;
+    background: rgba(192,57,75,0.15);
+    border: 1px solid rgba(192,57,75,0.3);
+    color: var(--blush);
+    font-size: 0.72rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 0.2rem 0.6rem;
+    border-radius: 20px;
+  }
+
+  /* Footer */
+  .footer {
+    text-align: center;
+    margin-top: 4rem;
+    opacity: 0;
+    transition: opacity 0.8s ease;
+  }
+
+  .footer.visible { opacity: 1; }
+
+  .footer-heart {
+    font-size: 2rem;
+    display: block;
+    margin-bottom: 1rem;
+    animation: heartbeat 1.5s ease-in-out infinite;
+  }
+
+  @keyframes heartbeat {
+    0%, 100% { transform: scale(1); }
+    14% { transform: scale(1.2); }
+    28% { transform: scale(1); }
+    42% { transform: scale(1.15); }
+    56% { transform: scale(1); }
+  }
+
+  .footer p {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    color: var(--blush);
+    font-size: 1rem;
+  }
+
+  .divider {
+    width: 60px;
+    height: 1px;
+    background: linear-gradient(to right, transparent, var(--rose), transparent);
+    margin: 3rem auto;
+  }
+</style>
+</head>
+<body>
+
+<!-- Floating particles -->
+<div class="particles" id="particles"></div>
+
+<!-- Envelope opening screen -->
+<div id="envelope-screen">
+  <p class="envelope-title">You have a message, Debbie 💌</p>
+  <div class="envelope-wrap" id="envelope" onclick="openEnvelope()">
+    <div class="envelope">
+      <div class="envelope-letter">❤️</div>
+    </div>
+  </div>
+  <p class="tap-hint">tap to open</p>
+</div>
+
+<!-- Main content -->
+<div id="main-content">
+  <div class="header">
+    <p class="header-date">February 14 &nbsp;·&nbsp; Something to look forward to</p>
+    <h1>Happy Valentine's Day,<br><span>Debbie</span> 🌹</h1>
+    <p class="header-sub">Here's what I've got planned for us 💌</p>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="timeline">
+
+    <div class="item">
+      <p class="item-time">Morning</p>
+      <div class="item-card">
+        <div class="item-top">
+          <span class="item-emoji">☀️</span>
+          <span class="item-title">Rise and shine, beautiful!</span>
+        </div>
+        <p class="item-desc">Good morning, beautiful. Yes I planned all of this, yes I'm that guy. Now let's get into it.</p>
+      </div>
+    </div>
+
+    <div class="item">
+      <p class="item-time">Afternoon</p>
+      <div class="item-card">
+        <div class="item-top">
+          <span class="item-emoji">🎮</span>
+          <span class="item-title">Games</span>
+        </div>
+        <p class="item-desc">May the best one win. What games? Good question 💀</p>
+        <span class="mystery-badge">★ surprise</span>
+      </div>
+    </div>
+
+    <div class="item">
+      <p class="item-time">Evening</p>
+      <div class="item-card">
+        <div class="item-top">
+          <span class="item-emoji">🎤</span>
+          <span class="item-title">Karaoke</span>
+        </div>
+        <p class="item-desc">Pick your best songs. I'll pick mine. No judges, no mercy.</p>
+        <span class="mystery-badge">★ surprise</span>
+      </div>
+    </div>
+
+    <div class="item">
+      <p class="item-time">Dinner</p>
+      <div class="item-card">
+        <div class="item-top">
+          <span class="item-emoji">🕯️</span>
+          <span class="item-title">Dinner Together</span>
+        </div>
+        <p class="item-desc">Me, you, food. What could possibly go wrong 😂</p>
+      </div>
+    </div>
+
+    <div class="item">
+      <p class="item-time">Night</p>
+      <div class="item-card">
+        <div class="item-top">
+          <span class="item-emoji">🎬</span>
+          <span class="item-title">Movies</span>
+        </div>
+        <p class="item-desc">Your favorite. Mine. And one we pick together. The rest? You'll see 🙂‍↕️</p>
+        <span class="mystery-badge">★ surprise</span>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="footer" id="footer">
+    <span class="footer-heart">♡</span>
+    <p>The best part of today hasn't been announced yet.</p>
+  </div>
+
+</div>
+
+<script>
+  // Generate particles
+  const emojis = ['♡', '✦', '·', '✿', '♡', '·', '✦'];
+  const container = document.getElementById('particles');
+  for (let i = 0; i < 25; i++) {
+    const p = document.createElement('div');
+    p.classList.add('particle');
+    p.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+    p.style.left = Math.random() * 100 + 'vw';
+    p.style.fontSize = (0.6 + Math.random() * 0.8) + 'rem';
+    p.style.animationDuration = (8 + Math.random() * 12) + 's';
+    p.style.animationDelay = (Math.random() * 10) + 's';
+    p.style.color = Math.random() > 0.5 ? '#c0394b' : '#f2a7b0';
+    container.appendChild(p);
+  }
+
+  // Envelope open
+  function openEnvelope() {
+    const env = document.getElementById('envelope');
+    env.classList.add('open');
+    setTimeout(() => {
+      document.getElementById('envelope-screen').classList.add('hide');
+      const main = document.getElementById('main-content');
+      main.classList.add('show');
+      setTimeout(animateItems, 400);
+    }, 700);
+  }
+
+  // Stagger timeline items
+  function animateItems() {
+    const items = document.querySelectorAll('.item');
+    items.forEach((item, i) => {
+      setTimeout(() => item.classList.add('visible'), i * 180);
+    });
+    setTimeout(() => {
+      document.getElementById('footer').classList.add('visible');
+    }, items.length * 180 + 300);
+  }
+</script>
+</body>
+</html>
